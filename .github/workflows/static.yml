@@ -44,4 +44,4 @@ jobs:
         uses: actions/deploy-pages@v2
       #  with:
        #   # Upload entire repository
-        #  path: '/week1/index.html'
+        #  path: './week1/'
