@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Counter App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    #counterValue {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    #value {
+      font-weight: bold;
+    }
+
+    .button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>Counter App</h1>
+  <p id="counterValue">Counter Value: <span id="value"></span></p>
+  <button id="incrementButton" class="button">Increment</button>
+  <button id="decrementButton" class="button">Decrement</button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"></script>
+  <script>
+    // Fetch the counter value from the server
+    
+    const host = "";  // enter you public ALB dns 
+    
+    
+    async function fetchCounterValue() {
+      try {
+        const response = await axios.get("http://"+host+":/counter");
+        return response.data.value;
+      } catch (error) {
+        console.error('Error retrieving counter value:', error);
+        throw error;
+      }
+    }
+
+    // Update the counter value on the page
+    function updateCounterValue(value) {
+      const valueElement = document.getElementById('value');
+      valueElement.textContent = value;
+    }
+
+    // Increment the counter value via the server
+    async function incrementCounter() {
+      try {
+        const response = await axios.post("http://"+host+"/increment");
+        updateCounterValue(response.data.value);
+      } catch (error) {
+        console.error('Error incrementing counter:', error);
+      }
+    }
+
+    // Decrement the counter value via the server
+    async function decrementCounter() {
+      try {
+        const response = await axios.post("http://"+host+"/decrement");
+        updateCounterValue(response.data.value);
+      } catch (error) {
+        console.error('Error decrementing counter:', error);
+      }
+    }
+
+    // Initialize the counter app
+    async function initializeCounterApp() {
+      try {
+        // Fetch the initial counter value
+        const initialValue = await fetchCounterValue();
+
+        // Update the counter value on the page
+        updateCounterValue(initialValue);
+
+        // Add event listeners to the increment and decrement buttons
+        const incrementButton = document.getElementById('incrementButton');
+        const decrementButton = document.getElementById('decrementButton');
+
+        incrementButton.addEventListener('click', incrementCounter);
+        decrementButton.addEventListener('click', decrementCounter);
+      } catch (error) {
+        console.error('Error initializing counter app:', error);
+      }
+    }
+
+    // Run the counter app initialization
+    initializeCounterApp();
+  </script>
+</body>
+</html>
