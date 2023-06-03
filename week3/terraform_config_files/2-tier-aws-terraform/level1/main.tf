@@ -10,8 +10,6 @@ module "vpc" {
   region = var.region
   availability_zones = var.availability_zones
 
-
-
 }
 
 
